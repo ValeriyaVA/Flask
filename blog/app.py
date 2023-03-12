@@ -1,21 +1,11 @@
-from flask import Flask
+from flask import Flask, render_template
+from blog.views.users import users_app
+from blog.views.articles import articles_app
 
-app = Flask(__name__)
-
-count = 0
-
-
-# Cоздайте базовый index view для обработки посещений на корень сайта.
+app = Flask(__name__, static_url_path='/static')
+app.register_blueprint(users_app, url_prefix="/users")
+app.register_blueprint(articles_app, url_prefix="/articles")
 
 @app.route("/")
 def index():
-    global count
-    count += 1
-    return f"Посещений на данный момент - {count}"
-
-# обнулим счётчик
-@app.route('/delete')
-def delete_index():
-    global count
-    count = 0
-    return f'Счетчик обнулен'
+    return render_template("index.html")
